@@ -8,15 +8,29 @@ repo (or your Claude skills directory) and go.
 
 ```
 public_skills/
-└── prop-fund-trading/          <- the skill (copy this whole folder)
-    ├── SKILL.md                <- skill instructions (Claude loads this)
-    ├── onboarding.md           <- how a user gets their session (Cookie-Editor)
-    ├── api-reference.md        <- every webhook action documented
-    ├── creds.example.json      <- credential template (copy to creds.json)
-    ├── .gitignore              <- keeps creds.json out of git
-    └── scripts/
-        └── webhook_client.py   <- zero-dependency client (Python stdlib only)
+├── prop-fund-trading/          <- EXECUTION skill (copy this whole folder)
+│   ├── SKILL.md                <- skill instructions (Claude loads this)
+│   ├── onboarding.md           <- how a user gets their session (Cookie-Editor)
+│   ├── api-reference.md        <- every webhook action documented
+│   ├── creds.example.json      <- credential template (copy to creds.json)
+│   ├── .gitignore              <- keeps creds.json out of git
+│   └── scripts/
+│       └── webhook_client.py   <- zero-dependency client (Python stdlib only)
+└── prop-fund-methodology/      <- METHODOLOGY skill (docs only, no creds/code)
+    ├── SKILL.md                <- the discipline Claude loads
+    └── references/
+        ├── robustness-battery.md   <- how to validate an edge before trusting it
+        ├── prop-firm-risk.md       <- FTMO hard-limit vs Darwinex VaR-normalized
+        └── ea-deployment.md        <- build/compile/deploy an MQL5 EA safely
 ```
+
+Two independent skills live here. **`prop-fund-trading`** *executes* trades on an
+authorised account through the hosted webhook. **`prop-fund-methodology`** is a
+documentation-only companion that captures the *discipline* — how to validate a
+strategy before trusting it (out-of-sample, cost, adjacency, generalization
+checks), size risk to each firm's rules, map broker server time, deploy an
+Expert Advisor safely, and monitor it read-only. It ships no code and no
+credentials; copy the folder the same way.
 
 It talks to the shared, hosted webhook:
 `https://prop-fund-ai-trading-skill-production.up.railway.app/webhook`
