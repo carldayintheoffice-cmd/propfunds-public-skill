@@ -1,0 +1,25 @@
+{
+  "_about": "GOV.UK pages the rules depend on. The watcher fetches each via the GOV.UK Content API and flags any page updated after our last review. When a page changes: re-read it, update rules/ and rates, then run `npm run watch-govuk -- --accept`.",
+  "pages": [
+    "/government/publications/benefit-and-pension-rates-2026-to-2027",
+    "/pension-credit",
+    "/pension-credit/eligibility",
+    "/pension-credit/what-youll-get",
+    "/attendance-allowance",
+    "/attendance-allowance/eligibility",
+    "/get-state-pension",
+    "/state-pension-age",
+    "/carers-allowance",
+    "/carers-allowance/eligibility",
+    "/housing-benefit",
+    "/housing-benefit/eligibility",
+    "/council-tax-reduction",
+    "/council-tax/discounts-for-people-who-live-alone",
+    "/winter-fuel-payment",
+    "/cold-weather-payment",
+    "/the-warm-home-discount-scheme",
+    "/support-for-mortgage-interest",
+    "/apply-for-elderly-person-bus-pass",
+    "/apply-blue-badge"
+  ]
+}
