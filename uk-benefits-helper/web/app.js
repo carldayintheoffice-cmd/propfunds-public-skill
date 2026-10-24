@@ -289,12 +289,11 @@ function renderSignup(errors = {}) {
     <div class="panel">
       <h2 style="margin-top:0">What it costs</h2>
       <p><strong>Nothing, unless your claim is successful.</strong></p>
-      <p>If it is, our fee is <strong>one month of the new money you are awarded</strong>, up to
-        ${money(PRICING.capGBP)}. You pay it once, after your award letter arrives. We send you a secure payment link then -
-        never before.</p>
-      ${quote.fee > 0 ? `<p>For example, from your answers: about ${money(quote.monthly)} a month of new money would mean
-        a fee of <strong>${money(quote.fee)}</strong>.</p>` : ''}
-      <p style="margin:0">Back pay, Council Tax reductions and one-off winter payments are not counted in the fee.</p>
+      <p>If it is, our fee is <strong>${money(PRICING.flatFeeGBP)}</strong>, once. That one fee covers every claim we
+        make for you. You pay it after your award letter arrives - we send you a secure payment link then, never before.</p>
+      ${quote.monthly > 0 ? `<p>From your answers you could get about <strong>${money(quote.monthly)} a month</strong>
+        (${money(quote.yearly)} a year) in new money.</p>` : ''}
+      <p style="margin:0">No hidden extras. No percentage of your money. No monthly charges.</p>
     </div>
 
     <div class="panel free">
@@ -321,14 +320,15 @@ function renderSignup(errors = {}) {
 
       <h2>Before you send</h2>
       ${tick('freeHelpUnderstood', 'I understand I can claim myself, or get free help from a charity, instead of paying.', errors)}
-      ${tick('termsAgreed', `I agree to the fee: one month of any new money awarded, up to ${money(PRICING.capGBP)}, paid only if my claim is successful.`, errors)}
+      ${tick('termsAgreed', `I agree to pay a one-off fee of ${money(PRICING.flatFeeGBP)}, only if a claim you make for me is approved.`, errors)}
       ${tick('contactAgreed', 'You can contact me and keep my details to help with my claim.', errors)}
       <details>
         <summary>Read the full terms in plain English</summary>
         <ul>
           <li>You can cancel within 14 days of signing up, free, for any reason.</li>
           <li>After that you can still cancel at any time. If we have already sent your claim and it is later successful, the fee still applies.</li>
-          <li>If your claim is refused, you pay nothing.</li>
+          <li>If every claim we make for you is refused, you pay nothing.</li>
+          <li>The fee is the same however many claims are approved.</li>
           <li>If paying would cause you hardship, tell us and we will reduce or waive the fee.</li>
           <li>We will never ask for your bank details, passwords, or GOV.UK or Government Gateway logins on the phone.</li>
           <li>You must answer every question on the claim honestly. We will not help with a claim we think is not correct.</li>

@@ -122,19 +122,20 @@ test('question flow hides partner questions for single people', () => {
   assert.ok(visibleQuestions({ couple: 'couple' }).some((q) => q.id === 'partnerDob'));
 });
 
-import { feeForAward, quoteFromReport, PRICING } from '../rules/pricing.js';
+import { feeForOutcome, quoteFromReport, monthlyFromWeekly } from '../rules/pricing.js';
 
-test('fee is one month of new weekly money, capped', () => {
-  assert.deepEqual(feeForAward(65.77), { monthly: 285, fee: 285, capped: false });
-  const big = feeForAward(200);
-  assert.equal(big.fee, PRICING.capGBP);
-  assert.equal(big.capped, true);
-  assert.equal(feeForAward(0).fee, 0);
+test('flat £299 fee, only when something is approved', () => {
+  assert.equal(feeForOutcome({ anyApproved: true }), 299);
+  assert.equal(feeForOutcome({ anyApproved: false }), 0);
+  assert.equal(monthlyFromWeekly(65.77), 285);
 });
 
-test('quote only counts results we are confident about', () => {
+test('quote estimate only counts results we are confident about', () => {
   const q = quoteFromReport(run(base));
   assert.equal(q.weekly, 53.1);
+  assert.equal(q.fee, 299);
+  assert.equal(q.paybackMonths, 2); // £230.10 a month
   const none = quoteFromReport(run({ ...base, statePensionIncome: { amount: 241.3, period: 'week' }, otherPensionIncome: { amount: 30000, period: 'year' }, savings: 80000, livesAlone: 'no' }));
-  assert.equal(none.fee, 0);
+  assert.equal(none.weekly, 0);
+  assert.equal(none.paybackMonths, null);
 });
