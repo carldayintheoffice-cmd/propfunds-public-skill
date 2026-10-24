@@ -1,8 +1,8 @@
 // Offline support so the app installs on phones and works with a poor signal.
-const CACHE = 'claimright-v1';
+const CACHE = 'claimright-v2';
 const FILES = [
   './', './index.html', './styles.css', './app.js', './icon.svg', './manifest.webmanifest',
-  '../rules/engine.js', '../rules/derive.js', '../rules/benefits.js', '../rules/questions.js', '../rules/rates-2026-27.js',
+  '../rules/engine.js', '../rules/derive.js', '../rules/benefits.js', '../rules/questions.js', '../rules/rates-2026-27.js', '../rules/pricing.js',
 ];
 self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES))));
 self.addEventListener('activate', (e) =>

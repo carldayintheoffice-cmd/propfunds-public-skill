@@ -81,6 +81,21 @@ a { color: var(--possible); }
 .amount { font-weight: 700; font-size: 1.15rem; }
 .warn { border-left: 4px solid #f47738; padding-left: 10px; }
 details summary { cursor: pointer; color: var(--possible); margin-top: 8px; }
+.field { margin-bottom: 22px; }
+.field label:not(.option), .field .label { display: block; font-weight: 700; margin-bottom: 4px; font-size: 1.05rem; }
+.field input[type="text"], .field input[type="tel"], .field input[type="email"] { width: 100%; max-width: 26rem; }
+input[type="tel"], input[type="email"] {
+  font: inherit; font-size: 1.1rem; padding: 10px; border: 2px solid var(--border); border-radius: 4px;
+  background: var(--bg); color: var(--ink); min-height: 52px;
+}
+.has-error { border-left: 5px solid #d4351c; padding-left: 14px; }
+.has-error .error { border: 0; padding: 0; margin: 4px 0 8px; }
+.error-summary { border: 4px solid #d4351c; padding: 16px 20px; margin: 0 0 24px; }
+.error-summary h2 { margin-top: 0; }
+.error-summary li { color: #d4351c; font-weight: 700; }
+.preview { background: var(--focus); color: #0b0c0c; padding: 8px 12px; font-weight: 700; border-radius: 4px; }
+.panel.free { border: 3px solid var(--possible); }
+.steps li { margin-bottom: 6px; }
 .site-footer { border-top: 2px solid var(--panel); padding: 20px 0; color: var(--muted); font-size: .9rem; }
 @media print {
   .site-header, .site-footer, .actions, button { display: none !important; }

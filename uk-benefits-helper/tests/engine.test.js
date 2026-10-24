@@ -121,3 +121,20 @@ test('question flow hides partner questions for single people', () => {
   assert.ok(!ids.includes('partnerDob'));
   assert.ok(visibleQuestions({ couple: 'couple' }).some((q) => q.id === 'partnerDob'));
 });
+
+import { feeForAward, quoteFromReport, PRICING } from '../rules/pricing.js';
+
+test('fee is one month of new weekly money, capped', () => {
+  assert.deepEqual(feeForAward(65.77), { monthly: 285, fee: 285, capped: false });
+  const big = feeForAward(200);
+  assert.equal(big.fee, PRICING.capGBP);
+  assert.equal(big.capped, true);
+  assert.equal(feeForAward(0).fee, 0);
+});
+
+test('quote only counts results we are confident about', () => {
+  const q = quoteFromReport(run(base));
+  assert.equal(q.weekly, 53.1);
+  const none = quoteFromReport(run({ ...base, statePensionIncome: { amount: 241.3, period: 'week' }, otherPensionIncome: { amount: 30000, period: 'year' }, savings: 80000, livesAlone: 'no' }));
+  assert.equal(none.fee, 0);
+});

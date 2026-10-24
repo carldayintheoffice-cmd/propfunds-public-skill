@@ -54,14 +54,17 @@ uk-benefits-helper/
 │   ├── questions.js       <- the question flow (plain English, conditional)
 │   ├── derive.js          <- ages, State Pension age, weekly amounts
 │   ├── benefits.js        <- one conservative rule per benefit
-│   └── engine.js          <- assess(answers) -> report
+│   ├── engine.js          <- assess(answers) -> report
+│   └── pricing.js         <- "Do it for me" fee (draft)
 ├── web/                   <- website + installable phone app (PWA)
 ├── tools/
 │   ├── govuk-watch.js     <- checks GOV.UK Content API for rule changes
 │   ├── govuk-sources.json <- the GOV.UK pages we depend on
 │   └── serve.js           <- local dev server
 ├── tests/                 <- node --test
-└── docs/ROADMAP.md
+└── docs/
+    ├── ROADMAP.md
+    └── FEE-TERMS-DRAFT.md <- paid service terms, for solicitor review
 ```
 
 The same `rules/` code will power every front end: the website, the iPhone and
@@ -95,3 +98,11 @@ there would tell vulnerable people the wrong thing.
 
 There is no public API for *submitting* benefit claims, so ClaimRight guides
 people to the official claim route rather than claiming on their behalf.
+
+## "Do it for me" service (draft)
+
+After the free check, people who could gain money can ask us to make the
+claim for them. No win, no fee: the fee is one month of the new money awarded
+(capped), charged once after the award letter arrives. The sign-up page always
+tells people the same help is available free. It is a preview only for now and
+sends nothing. See [docs/FEE-TERMS-DRAFT.md](docs/FEE-TERMS-DRAFT.md).

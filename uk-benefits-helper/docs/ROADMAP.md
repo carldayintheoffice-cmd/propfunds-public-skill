@@ -16,6 +16,17 @@
       (done in the UI; needs legal review).
 - [ ] Choose a final name and check trademarks; register the domain.
 
+## "Do it for me" paid service
+
+- [x] Draft sign-up page (preview only, sends nothing) and draft fee terms.
+- [ ] Owner decisions: fee cap, what counts towards the fee (docs/FEE-TERMS-DRAFT.md).
+- [ ] Solicitor review of terms and regulatory position; ICO registration; privacy notice; DPIA.
+- [ ] Back end: secure storage of sign-ups (UK hosting, encrypted), staff call-back queue.
+- [ ] Case tracker: signed up -> called -> claim sent -> decision -> fee due -> paid / waived.
+- [ ] E-signature for the customer agreement.
+- [ ] Payment link after award (card or Direct Debit, e.g. Stripe or GoCardless).
+- [ ] Staff training on vulnerable customers, scams awareness, and honest claims.
+
 ## Phase 1 - pension age, done well
 
 - [ ] Savings Credit exact calculation (needs 2026/27 threshold).
