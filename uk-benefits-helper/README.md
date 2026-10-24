@@ -55,12 +55,17 @@ uk-benefits-helper/
 │   ├── derive.js          <- ages, State Pension age, weekly amounts
 │   ├── benefits.js        <- one conservative rule per benefit
 │   ├── engine.js          <- assess(answers) -> report
-│   └── pricing.js         <- "Do it for me" fee (draft)
+│   ├── pricing.js         <- "Do it for me" fee
+│   └── signup.js          <- sign-up checks, shared by page and server
 ├── web/                   <- website + installable phone app (PWA)
+├── server/                <- back end (Node, no dependencies)
+│   ├── index.js           <- start-up and settings
+│   ├── app.js             <- website, sign-up API, staff page
+│   ├── store.js           <- sign-ups in SQLite
+│   └── admin.js           <- staff call-back list
 ├── tools/
 │   ├── govuk-watch.js     <- checks GOV.UK Content API for rule changes
-│   ├── govuk-sources.json <- the GOV.UK pages we depend on
-│   └── serve.js           <- local dev server
+│   └── govuk-sources.json <- the GOV.UK pages we depend on
 ├── tests/                 <- node --test
 └── docs/
     ├── ROADMAP.md
@@ -73,14 +78,36 @@ one set of tests and one place to update when the government changes something.
 
 ## Run it
 
-Needs Node.js 20 or newer. No install step.
+Needs Node.js 22.13 or newer. No install step.
 
 ```bash
 cd uk-benefits-helper
-npm test              # run the rules tests
-npm start             # open http://localhost:8080
-npm run watch-govuk   # check GOV.UK for changes to the pages we rely on
+npm test                                   # rules and server tests
+ADMIN_PASSWORD='choose-a-long-one' npm start
+# website:    http://localhost:8080
+# staff page: http://localhost:8080/admin  (any username, the password above)
+npm run watch-govuk                        # check GOV.UK for changes to the pages we rely on
 ```
+
+### Settings
+
+| Variable | What it does |
+| --- | --- |
+| `PORT` | Port to listen on (default 8080) |
+| `DATA_DIR` | Folder for the sign-up database (default `./data`, never committed) |
+| `ADMIN_PASSWORD` | Staff page password, 12+ characters. The staff page is off without it |
+| `NOTIFY_WEBHOOK_URL` | Optional. A Slack, Discord or Teams webhook told about each new request (reference number and call time only - no personal details) |
+| `TRUST_PROXY` | Set to `1` behind a hosting proxy so spam limits see the real visitor |
+
+### Putting it online
+
+Any host that runs Node 22 with a **persistent disk** works (for example
+Railway with a volume, Render, Fly.io). Before real customers use it:
+
+- HTTPS only (the hosts above provide it).
+- Host in the UK or EU, with disk encryption and daily backups of `DATA_DIR`.
+- A long, unique `ADMIN_PASSWORD`, shared only with staff.
+- ICO registration and a privacy notice (see docs/FEE-TERMS-DRAFT.md).
 
 On a phone, open the site and choose "Add to Home Screen" to install it as an app.
 
@@ -104,5 +131,11 @@ people to the official claim route rather than claiming on their behalf.
 After the free check, people who could gain money can ask us to make the
 claim for them. No win, no fee: £299, or 3 months of the new money if that is less,
 covering every claim we make, charged once after the award letter arrives. The sign-up page always
-tells people the same help is available free. It is a preview only for now and
-sends nothing. See [docs/FEE-TERMS-DRAFT.md](docs/FEE-TERMS-DRAFT.md).
+tells people the same help is available free. See [docs/FEE-TERMS-DRAFT.md](docs/FEE-TERMS-DRAFT.md).
+
+When someone asks for a call back, the server stores their contact details,
+their three consents and a summary of their results (which benefits and the
+estimate). Their answers about health, income and savings never leave their
+device. Staff work through requests on `/admin`, moving each one through
+New -> Called -> Claim sent -> Approved / Refused -> Fee paid / waived, with
+notes, and can delete a record when a customer asks.

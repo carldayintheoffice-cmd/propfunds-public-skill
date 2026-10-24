@@ -4,6 +4,7 @@
 import { visibleQuestions, questionText } from '../rules/questions.js';
 import { assess, STATUS_LABELS } from '../rules/engine.js';
 import { quoteFromReport, PRICING } from '../rules/pricing.js';
+import { validateSignup, buildSignupRecord, CALL_TIMES } from '../rules/signup.js';
 
 const app = document.getElementById('app');
 const STORE_KEY = 'claimright-answers';
@@ -218,22 +219,21 @@ function renderResults() {
 }
 
 // ------------------------------------------------------- "Do it for me" sign-up
-// DRAFT: nothing is sent anywhere yet. The back end (secure storage, call-back
-// queue, e-signature, payment link after award) is still to be built.
+// Sends contact details and a summary of the results to our team. The raw
+// check answers (health, income, savings) never leave the device.
 
-const SIGNUP_FIELDS = {
-  forWhom: (v) => (v ? '' : 'Choose who the claim is for'),
-  claimantName: (v) => (v.trim().length > 1 ? '' : 'Enter the full name of the person claiming'),
-  helperName: (v, d) => (d.forWhom !== 'someoneElse' || v.trim().length > 1 ? '' : 'Enter your name'),
-  helperRelationship: (v, d) => (d.forWhom !== 'someoneElse' || v.trim() ? '' : 'Tell us how you know them'),
-  phone: (v) => (/^\+?[\d\s()-]{10,16}$/.test(v.trim()) && v.replace(/\D/g, '').length >= 10 ? '' : 'Enter a phone number, for example 07700 900123'),
-  email: (v) => (!v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Enter an email address like name@example.com, or leave it empty'),
-  postcode: (v) => (/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i.test(v.trim()) ? '' : 'Enter a postcode, for example SW1A 1AA'),
-  callTime: (v) => (v ? '' : 'Choose the best time to call'),
-  freeHelpUnderstood: (v) => (v ? '' : 'Tick to show you understand free help is available'),
-  termsAgreed: (v) => (v ? '' : 'Tick to agree to the fee terms'),
-  contactAgreed: (v) => (v ? '' : 'Tick to let us contact you about the claim'),
-};
+let signupReference = '';
+
+/** Send a sign-up to the server. Returns the reference number. */
+async function sendSignup(record) {
+  const res = await fetch('/api/signups', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record),
+  });
+  if (!res.ok) throw new Error(`send failed: ${res.status}`);
+  return (await res.json()).reference;
+}
 
 function field(id, label, { hint = '', type = 'text', autocomplete = '', inputmode = '', errors = {} } = {}) {
   return `
@@ -266,13 +266,12 @@ function tick(id, label, errors) {
     </div>`;
 }
 
-function renderSignup(errors = {}) {
+function renderSignup(errors = {}, sendError = '') {
   const quote = quoteFromReport(assess(answers));
   const errorList = Object.values(errors).filter(Boolean);
   const someoneElse = signup.forWhom === 'someoneElse';
 
   app.innerHTML = `
-    <p class="preview">Preview: this form does not send your details anywhere yet.</p>
     <h1>Let us do your claim for you</h1>
     ${errorList.length ? `<div class="error-summary" role="alert" tabindex="-1"><h2>Please check these answers</h2>
       <ul>${errorList.map((e) => `<li>${esc(e)}</li>`).join('')}</ul></div>` : ''}
@@ -317,7 +316,7 @@ function renderSignup(errors = {}) {
       ${field('phone', 'Phone number', { type: 'tel', autocomplete: 'tel', hint: 'We will call you on this number.', errors })}
       ${field('email', 'Email address (optional)', { type: 'email', autocomplete: 'email', errors })}
       ${field('postcode', 'Postcode', { autocomplete: 'postal-code', errors })}
-      ${radios('callTime', 'When is the best time to call?', [['morning', 'Morning (9am to 12pm)'], ['afternoon', 'Afternoon (12pm to 5pm)'], ['evening', 'Early evening (5pm to 7pm)']], errors)}
+      ${radios('callTime', 'When is the best time to call?', Object.entries(CALL_TIMES), errors)}
 
       <h2>Before you send</h2>
       ${tick('freeHelpUnderstood', 'I understand I can claim myself, or get free help from a charity, instead of paying.', errors)}
@@ -338,8 +337,13 @@ function renderSignup(errors = {}) {
           <li>We keep your details securely and only use them for your claim. You can ask us to delete them.</li>
         </ul>
       </details>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label>
+        <input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <p class="hint">We receive your contact details and a summary of your results (which benefits and roughly how
+        much). Your answers about health, income and savings stay on this device.</p>
+      ${sendError ? `<p class="error" role="alert">${esc(sendError)}</p>` : ''}
       <div class="actions">
-        <button type="submit">Ask for a call back</button>
+        <button type="submit" id="send">Ask for a call back</button>
         <button type="button" class="link" id="back">Back to my results</button>
       </div>
     </form>`;
@@ -357,17 +361,25 @@ function renderSignup(errors = {}) {
     el.onchange = () => { collect(); renderSignup(); };
   });
   document.getElementById('back').onclick = () => { collect(); step = visibleQuestions(answers).length; render(); };
-  form.onsubmit = (e) => {
+  form.onsubmit = async (e) => {
     e.preventDefault();
     collect();
-    const found = {};
-    for (const [id, check] of Object.entries(SIGNUP_FIELDS)) {
-      const msg = check(typeof signup[id] === 'string' ? signup[id] : signup[id] ? 'yes' : '', signup);
-      if (msg) found[id] = msg;
-    }
+    const found = validateSignup(signup);
     if (Object.keys(found).length) {
       renderSignup(found);
       app.querySelector('.error-summary')?.focus();
+      return;
+    }
+    const button = document.getElementById('send');
+    button.disabled = true;
+    button.textContent = 'Sending...';
+    try {
+      const report = assess(answers);
+      const website = document.getElementById('website').value;
+      signupReference = await sendSignup({ ...buildSignupRecord(signup, report, quoteFromReport(report)), website });
+    } catch {
+      renderSignup({}, 'We could not send your request. Check you are connected to the internet and press the button again.');
+      document.getElementById('send')?.focus();
       return;
     }
     step = 'signupDone';
@@ -379,11 +391,11 @@ function renderSignupDone() {
   const who = signup.forWhom === 'someoneElse' ? signup.helperName : signup.claimantName;
   const when = { morning: 'in the morning', afternoon: 'in the afternoon', evening: 'in the early evening' }[signup.callTime];
   app.innerHTML = `
-    <p class="preview">Preview: in the finished service your request would be sent to our team now.</p>
     <h1>Thank you, ${esc(who.split(' ')[0])}</h1>
     <div class="panel">
+      <p>We have your request. Your reference number is <strong>${esc(signupReference)}</strong>.</p>
       <p>We will phone you on <strong>${esc(signup.phone)}</strong> ${esc(when)}, usually within 2 working days.</p>
-      <p style="margin:0">When we call, we will say your name and postcode so you know it is us. We will never ask for your bank
+      <p style="margin:0">When we call, we will say your reference number and postcode so you know it is us. We will never ask for your bank
         details or passwords.</p>
     </div>
     <h2>Have these ready for the call</h2>

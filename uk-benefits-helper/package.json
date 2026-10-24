@@ -4,10 +4,12 @@
   "private": true,
   "description": "Helps UK pensioners find and claim every benefit they are entitled to - and nothing they are not.",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
-    "test": "node --test tests/*.test.js",
-    "start": "node tools/serve.js",
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js",
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
     "watch-govuk": "node tools/govuk-watch.js"
   }
 }

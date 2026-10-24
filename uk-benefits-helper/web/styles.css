@@ -96,6 +96,7 @@ input[type="tel"], input[type="email"] {
 .preview { background: var(--focus); color: #0b0c0c; padding: 8px 12px; font-weight: 700; border-radius: 4px; }
 .panel.free { border: 3px solid var(--possible); }
 .steps li { margin-bottom: 6px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .site-footer { border-top: 2px solid var(--panel); padding: 20px 0; color: var(--muted); font-size: .9rem; }
 @media print {
   .site-header, .site-footer, .actions, button { display: none !important; }

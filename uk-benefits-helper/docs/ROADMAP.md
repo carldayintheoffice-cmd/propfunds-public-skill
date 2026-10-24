@@ -21,8 +21,11 @@
 - [x] Draft sign-up page (preview only, sends nothing) and draft fee terms.
 - [x] Owner decision: £299 or 3 months of new money (whichever is less), once, if any claim is approved.
 - [ ] Solicitor review of terms and regulatory position; ICO registration; privacy notice; DPIA.
-- [ ] Back end: secure storage of sign-ups (UK hosting, encrypted), staff call-back queue.
-- [ ] Case tracker: signed up -> called -> claim sent -> decision -> fee due -> paid / waived.
+- [x] Back end: sign-ups stored (SQLite), staff call-back list with status, notes and delete.
+- [x] Case tracker: new -> called -> claim sent -> approved / refused -> fee paid / waived.
+- [ ] Hosting: choose a UK/EU host with disk encryption and backups; deploy; custom domain.
+- [ ] Staff accounts (one login each, with an audit log) instead of one shared password.
+- [ ] Email or text confirmation to the customer with their reference number.
 - [ ] E-signature for the customer agreement.
 - [ ] Payment link after award (card or Direct Debit, e.g. Stripe or GoCardless).
 - [ ] Staff training on vulnerable customers, scams awareness, and honest claims.
