@@ -1,0 +1,15 @@
+{
+  "name": "uk-benefits-helper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Helps UK pensioners find and claim every benefit they are entitled to - and nothing they are not.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js",
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "watch-govuk": "node tools/govuk-watch.js"
+  }
+}

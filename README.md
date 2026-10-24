@@ -1,5 +1,8 @@
 # public_skills
 
+> Also in this repo: [`uk-benefits-helper/`](uk-benefits-helper/README.md), the start of
+> ClaimRight, a benefits check for UK pensioners (separate project, early prototype).
+
 Installable Claude Skill(s) for trading an authorised Bitfunded-style prop-firm
 account through the hosted webhook. Copy a skill folder into your own skills
 repo (or your Claude skills directory) and go.
