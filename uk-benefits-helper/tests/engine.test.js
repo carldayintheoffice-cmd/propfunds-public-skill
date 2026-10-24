@@ -124,9 +124,10 @@ test('question flow hides partner questions for single people', () => {
 
 import { feeForOutcome, quoteFromReport, monthlyFromWeekly } from '../rules/pricing.js';
 
-test('flat £299 fee, only when something is approved', () => {
-  assert.equal(feeForOutcome({ anyApproved: true }), 299);
-  assert.equal(feeForOutcome({ anyApproved: false }), 0);
+test('fee is £299 or 3 months of new money, whichever is less', () => {
+  assert.equal(feeForOutcome({ anyApproved: true, newWeekly: 65.77 }), 299); // 3 months = £855
+  assert.equal(feeForOutcome({ anyApproved: true, newWeekly: 5 }), 65); // 3 months = £65
+  assert.equal(feeForOutcome({ anyApproved: false, newWeekly: 65.77 }), 0);
   assert.equal(monthlyFromWeekly(65.77), 285);
 });
 
@@ -134,8 +135,7 @@ test('quote estimate only counts results we are confident about', () => {
   const q = quoteFromReport(run(base));
   assert.equal(q.weekly, 53.1);
   assert.equal(q.fee, 299);
-  assert.equal(q.paybackMonths, 2); // £230.10 a month
   const none = quoteFromReport(run({ ...base, statePensionIncome: { amount: 241.3, period: 'week' }, otherPensionIncome: { amount: 30000, period: 'year' }, savings: 80000, livesAlone: 'no' }));
   assert.equal(none.weekly, 0);
-  assert.equal(none.paybackMonths, null);
+  assert.equal(none.fee, null);
 });

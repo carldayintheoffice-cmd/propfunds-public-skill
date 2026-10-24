@@ -19,8 +19,7 @@
 ## "Do it for me" paid service
 
 - [x] Draft sign-up page (preview only, sends nothing) and draft fee terms.
-- [x] Owner decision: flat £299 fee, once, if any claim is approved.
-- [ ] Owner decision: how to treat small awards (docs/FEE-TERMS-DRAFT.md).
+- [x] Owner decision: £299 or 3 months of new money (whichever is less), once, if any claim is approved.
 - [ ] Solicitor review of terms and regulatory position; ICO registration; privacy notice; DPIA.
 - [ ] Back end: secure storage of sign-ups (UK hosting, encrypted), staff call-back queue.
 - [ ] Case tracker: signed up -> called -> claim sent -> decision -> fee due -> paid / waived.

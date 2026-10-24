@@ -8,9 +8,10 @@
 
 | Decision | Draft choice | Why |
 | --- | --- | --- |
-| Fee basis | **Flat £299** (owner decision) | Simple, the same for everyone |
-| Several benefits awarded | One £299 fee covers every claim we make for the customer | Avoids "fee per benefit" stacking |
-| Small awards | **Open question** - see below | A flat fee can exceed what a small award is worth |
+| Fee basis | **£299, or the first 3 months of new money, whichever is less** (owner decision) | Simple to say, and never more than a small award is worth |
+| What counts as new money | New regular benefit payments plus regular Council Tax / rates reductions | Both are money the customer keeps every week |
+| What is not counted | Back pay, one-off and winter payments | Lump sums would distort the 3-month figure |
+| Several benefits awarded | One fee covers every claim we make for the customer | Avoids "fee per benefit" stacking |
 | When charged | Once, after the customer receives the award letter | No win, no fee |
 | How paid | Secure payment link (card or Direct Debit) sent after award | Nothing collected up front; no bank details on the phone |
 | Hardship | Reduce or waive on request | Vulnerable customers; reputation |
@@ -23,8 +24,9 @@
 2. If you ask us to do it for you, we help you fill in the claim, you check and
    sign it, we send it and chase it up.
 3. You pay nothing unless the claim is successful.
-4. If it is, our fee is £299, once, however many claims are approved. You pay
-   it after your award letter arrives.
+4. If it is, our fee is £299, or 3 months of your new money if that is less.
+   You pay once, however many claims are approved, after your award letter
+   arrives.
 5. You can cancel within 14 days of signing up, free, for any reason. After
    that you can still cancel; if we have already sent the claim and it is later
    successful, the fee still applies.
@@ -38,18 +40,14 @@
 10. We keep your details securely, use them only for your claim, and delete
     them on request (subject to records we must keep by law).
 
-## Open question: small awards
+## Examples
 
-With a flat fee, someone awarded a small amount (for example £5 a week of
-Savings Credit, about £22 a month) would pay more than a year of that award in
-fees. That could be challenged as unfair to a vulnerable customer and would
-look bad in the press. Options:
-
-1. Only offer the service when the estimate is at least, say, £100 a month.
-2. Fee is £299 or the first 3 months of new money, whichever is less.
-3. Keep £299 for everyone and rely on the hardship waiver.
-
-Recommendation: option 2 - still simple to say, and never unfair.
+| New money awarded | 3 months of it | Fee |
+| --- | --- | --- |
+| £285 a month | £855 | £299 |
+| £100 a month | £300 | £299 |
+| £50 a month | £150 | £150 |
+| £5 a week (about £22 a month) | £65 | £65 |
 
 ## Questions for the solicitor
 

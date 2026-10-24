@@ -102,7 +102,7 @@ people to the official claim route rather than claiming on their behalf.
 ## "Do it for me" service (draft)
 
 After the free check, people who could gain money can ask us to make the
-claim for them. No win, no fee: one flat £299 fee covering every claim we make,
-charged once after the award letter arrives. The sign-up page always
+claim for them. No win, no fee: £299, or 3 months of the new money if that is less,
+covering every claim we make, charged once after the award letter arrives. The sign-up page always
 tells people the same help is available free. It is a preview only for now and
 sends nothing. See [docs/FEE-TERMS-DRAFT.md](docs/FEE-TERMS-DRAFT.md).

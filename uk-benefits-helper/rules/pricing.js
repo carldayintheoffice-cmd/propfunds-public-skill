@@ -1,39 +1,48 @@
 // Fee for the "Do it for me" claim service.
 //
-// Owner decision: one flat fee of £299, charged once, only if at least one
-// claim we make for the customer is approved. One fee covers every claim we
-// make for them, however many are approved. The fee is charged after the
-// award letter arrives, never up front. Terms still need a solicitor's review
-// (see docs/FEE-TERMS-DRAFT.md).
+// Owner decision: £299, or the first 3 months of new money, whichever is
+// less. Charged once, only if at least one claim we make is approved, after
+// the award letter arrives. One fee covers every claim we make.
+//
+// "New money" = new regular benefit payments plus regular reductions in
+// Council Tax or rates. Back pay and one-off or winter payments are not
+// counted. Terms still need a solicitor's review (docs/FEE-TERMS-DRAFT.md).
 
 export const PRICING = {
-  flatFeeGBP: 299,
+  maxFeeGBP: 299,
+  monthsOfNewMoney: 3,
   vatIncluded: true,
 };
 
 const round2 = (n) => Math.round(n * 100) / 100;
 
-/** One month of a weekly amount: weekly x 52 / 12. Used to show the estimate. */
+/** One month of a weekly amount: weekly x 52 / 12. */
 export const monthlyFromWeekly = (weekly) => round2((weekly * 52) / 12);
 
-/** The fee due once the outcome is known. */
-export const feeForOutcome = ({ anyApproved }) => (anyApproved ? PRICING.flatFeeGBP : 0);
+/**
+ * Fee due once the outcome is known.
+ * @param {{ anyApproved: boolean, newWeekly: number }} outcome
+ *   newWeekly - total weekly new money on the award letters
+ */
+export function feeForOutcome({ anyApproved, newWeekly }) {
+  if (!anyApproved) return 0;
+  const threeMonths = round2(Math.max(0, newWeekly) * (52 / 12) * PRICING.monthsOfNewMoney);
+  return Math.min(PRICING.maxFeeGBP, threeMonths);
+}
 
 /**
  * Example shown before sign-up, from an assess() report. Only 'likely'
- * results with an amount count towards the estimate of new money.
+ * results with an amount count towards the estimate. With no estimate the
+ * page says "up to £299".
  */
 export function quoteFromReport(report) {
   const weekly = round2(report.results
     .filter((r) => r.status === 'likely' && r.weekly)
     .reduce((sum, r) => sum + r.weekly, 0));
-  const monthly = monthlyFromWeekly(weekly);
   return {
     weekly,
-    monthly,
+    monthly: monthlyFromWeekly(weekly),
     yearly: round2(weekly * 52),
-    fee: PRICING.flatFeeGBP,
-    // Months of new money it takes to cover the fee (null if no estimate).
-    paybackMonths: monthly > 0 ? Math.ceil(PRICING.flatFeeGBP / monthly) : null,
+    fee: weekly > 0 ? feeForOutcome({ anyApproved: true, newWeekly: weekly }) : null,
   };
 }
